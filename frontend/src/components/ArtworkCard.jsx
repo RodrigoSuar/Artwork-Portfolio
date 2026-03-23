@@ -1,0 +1,10 @@
+export default function ArtworkCard({ artwork }) {
+
+  
+  return (
+    <div className="artwork-card">
+      <img src={artwork.image} alt={artwork.title} />
+      <h3>{artwork.title}</h3>
+    </div>
+  )
+}
