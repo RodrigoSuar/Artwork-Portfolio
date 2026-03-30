@@ -4,44 +4,49 @@ const Artwork = require('../models/artwork')
 
 
 //get all images
-artworksRouter.get('/',(reqeust,response,next) => {
-  Artwork.find({}).then(artwork => {
+artworksRouter.get('/', async (reqeust,response,next) => {
+  try {
+    const artwork = await Artwork.find({})
     response.json(artwork)
-  })
-    .catch(error => next(error))
+  } catch (error) {
+    next(error)
+  }
 })
 
 
 //retrieve spcific image
-artworksRouter.get('/:id',(request,response,next) => {
-  const id = request.params.id
-  Artwork.findById(id).then(note => {
+artworksRouter.get('/:id', async (request,response,next) => {
+  try {
+    const id = request.params.id
+    const note = await Artwork.findById(id)
     response.json(note)
-  })
-    .catch(error => next(error))
+  } catch (error) {
+    next(error)
+  }
 })
 
 //add image
-artworksRouter.post('/',(request,response,next) => {
-  const body = request.body
- 
-  if(!body.image){
-    return response.status(400).json({
-      error:'missing image url'
+artworksRouter.post('/', async (request,response,next) => {
+  try {
+    const body = request.body
+   
+    if(!body.image){
+      return response.status(400).json({
+        error:'missing image url'
+      })
+    }
+    
+
+    const artwork = new Artwork ({
+      title: body.title,
+      image: body.image
     })
-  }
-  
 
-  const artwork = new Artwork ({
-    title: body.title,
-    image: body.image
-  })
-
-  artwork.save().then(savedArtwork => {
+    const savedArtwork = await artwork.save()
     response.status(201).json(savedArtwork)
-  })
-
-    .catch(error => next(error))
+  } catch (error) {
+    next(error)
+  }
 })
 
 
