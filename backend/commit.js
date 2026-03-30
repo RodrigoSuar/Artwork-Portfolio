@@ -9,6 +9,7 @@ const rl = readline.createInterface({
 rl.question("Enter commit message: ", (message) => {
   try {
     execSync("npm run build:ui", { stdio: "inherit" });
+    execSync("npm run exit", { stdio: "inherit" });
     execSync("git add .", { stdio: "inherit" });
     execSync(`git commit -m "${message}"`, { stdio: "inherit" });
     execSync("git push", { stdio: "inherit" });
