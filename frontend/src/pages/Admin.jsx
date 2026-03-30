@@ -87,12 +87,12 @@ const Admin = () => {
     
 
     return (
-        <>
+        <div className="adminPage">
             welcome to admin pages
 
-            <form onSubmit={addArtwork}>
-                <input value ={newArtwork.title} onChange={handleArtworkTitleChange}/>
-                <input value = {newArtwork.image} onChange={handleArtworkImageChange}/>
+            <form onSubmit={addArtwork} className="addImage">
+                <input value ={newArtwork.title} onChange={handleArtworkTitleChange} required/>
+                <input value = {newArtwork.image} onChange={handleArtworkImageChange} required/>
                 <button type="submit">save</button>
             </form>
 
@@ -119,7 +119,7 @@ const Admin = () => {
 
 
 
-        </>
+        </div>
     )
 }
 
