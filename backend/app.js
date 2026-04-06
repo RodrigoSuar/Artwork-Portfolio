@@ -4,24 +4,33 @@ const config = require('./utils/config')
 const logger = require('./utils/logger')
 const middleware = require('./utils/middleware')
 const artworksRouter = require('./controller/artworks')
+const s3 = require('./services/s3')
+
+const { ListBucketsCommand } = require('@aws-sdk/client-s3')
+
 
 const app = express()
 
 logger.info('connecting to' , config.MONGODB_URI)
 
-// mongoose
-//     .connect(config.MONGODB_URI, {family:4})
-//     .then(() => {
-//         logger.info('connected to MongoDB')
-//     })
-//     .catch((error) => {
-//         logger.error(error)
-//     })
+
 
 async function connectToMongoose() {
     await mongoose.connect(config.MONGODB_URI);
-    logger.info("Connected to MongoDB")
+    logger.info("Connected to MongoDB") 
+   
 }
+
+async function connectToS3() {
+    try {
+        await s3.send(new ListBucketsCommand)
+        logger.info("Connected to S3")
+    } catch(error){
+        logger.error("Connection to S3 failed")
+        logger.error(error)
+    }
+}
+
 
 
 try{
@@ -30,6 +39,10 @@ try{
 } catch (error){
     logger.error(error)
 }
+
+
+
+
 
 
 app.use(express.static('dist'))

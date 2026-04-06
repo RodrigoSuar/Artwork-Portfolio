@@ -7,13 +7,19 @@ const Admin = () => {
     const [newArtwork, setNewArtwork] = useState({
         title: '',
         image: '',
-        id: ''
+        id: '',
+        description: '',
+        year: '',
+        key: '',
     })
     const [artwork,setArtworks] = useState([])
 
     const [isPopUp, setIsPopUp] = useState(false)
     const [newTitle,setNewTitle] = useState('')
     const [id, setId] = useState("")
+
+    const [imageFile,setImageFile] = useState(null)
+
     useEffect(() => {
         artworkService.getAll()
             .then(data => setArtworks(data))
@@ -21,17 +27,32 @@ const Admin = () => {
     },[])
     
     
-    const addArtwork = event => {
+    const addArtwork = async (event) => {
          event.preventDefault()
+
+
+         const urls = await artworkService.createURL(imageFile)
+
+         console.log(urls)
+
+        await artworkService.uploadFile(imageFile,urls.uploadURL)
+
          const artworkObject = {
             title: newArtwork.title,
-            image: newArtwork.image
+            image: urls.fileUrl,
+            description: newArtwork.description,
+            key: urls.key
          }
 
+         //console.log(artworkObject)
          artworkService.create(artworkObject).then((returnedArtworkObject) =>{
             setNewArtwork({
                 title: '',
-                image: ''
+                image: '',
+                description:'',
+                year: '',
+                id: '',
+                key: '',
             })
              setArtworks([...artwork,returnedArtworkObject])
 
@@ -39,18 +60,32 @@ const Admin = () => {
          })
     }
 
-    const handleArtworkTitleChange = (event) => {
-        setNewArtwork({
+    
+
+    
+
+    const handleArtworkChange = (event) => { 
+        const {name,value} = event.target 
+        setNewArtwork({ 
             ...newArtwork,
-            title:event.target.value
-        })
+             [name]:value 
+            })
+    
     }
 
-    const handleArtworkImageChange = (event) => {
-        setNewArtwork({
-            ...newArtwork,
-            image:event.target.value
-        })
+    const handleFileChange = (event) => {
+        const file = event.target.files?.[0]
+
+        if(!file) return 
+
+        if(!file.type.startsWith("image/")){
+            alert("Please upload an image file")
+            return;
+        }
+        
+
+        setImageFile(file)
+        
     }
 
     const deleteArtwork = (id) => {
@@ -84,6 +119,8 @@ const Admin = () => {
     const handleTitleChange = (event) => {
         setNewTitle(event.target.value)
     }
+
+   
     
 
     return (
@@ -91,16 +128,41 @@ const Admin = () => {
             welcome to admin pages
 
             <form onSubmit={addArtwork} className="addImage">
-                <input value ={newArtwork.title} onChange={handleArtworkTitleChange} required/>
-                <input value = {newArtwork.image} onChange={handleArtworkImageChange} required/>
+                <label>Photo title</label>
+                <input 
+                    name='title' 
+                    value ={newArtwork.title} 
+                    onChange={handleArtworkChange} 
+                    required
+                />
+
+                <label>Photo description</label>
+                <input 
+                    name = 'description' 
+                    value = {newArtwork.description} 
+                    onChange={handleArtworkChange} 
+                    required/>
+
+                <label>Upload photo</label>
+                <input 
+                    type="file" 
+                    name="image"
+                    onChange={handleFileChange}
+                    required
+                    />
+
+
                 <button type="submit">save</button>
             </form>
+
+            
 
             <div className="gallery">
                 {artwork.map(art =>(
                     <div key={art.id} className="artwork-card">
                         <img src={art.image} alt={art.title} />
                         <h3>{art.title}</h3>
+                        <p>{`${art.description}`}</p>
                         <button onClick={() => deleteArtwork(art.id)}>Delete</button>
                         <button onClick={() => handleUpdate(art.id)}>Update</button>
                     </div>

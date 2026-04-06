@@ -13,7 +13,12 @@ const artworkSchema = new mongoose.Schema({
     type: String,
     minLength: 10
   },
-  year: String
+  year: String,
+
+  key: {
+    type: String,
+    required: true
+  }
 
 })
 

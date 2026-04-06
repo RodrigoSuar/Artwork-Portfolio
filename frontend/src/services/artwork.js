@@ -26,9 +26,43 @@ const update =  async (id, newObject) => {
         throw error
     }
 }
+const createURL =  async (file) => {
+    try{
+        if(!file){
+            return "error no file entered"
+        }
+
+        const request = await axios.get(`${baseUrl}/upload-url/image?type=${encodeURIComponent(file.type)}`)
+        //console.log(request.data)
+        return request.data
+    } catch (error) {
+        console.log(error)
+    }   
+}
+
+
+const uploadFile = async (file,url) => {
+    try{
+        //console.log(url)
+        await axios.put(url,file, {
+            headers:{
+                "Content-Type": file.type
+            }
+        })
+
+        
+    } catch (error){
+        console.error(error)
+    }
+}
+
+
+
 export default {
     getAll,
     create,
     remove,
-    update
+    update,
+    createURL,
+    uploadFile
 }
