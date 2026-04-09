@@ -3,10 +3,11 @@ const mongoose = require('mongoose')
 const config = require('./utils/config')
 const logger = require('./utils/logger')
 const middleware = require('./utils/middleware')
-const artworksRouter = require('./controller/artworks')
-const s3 = require('./services/s3')
 
-const { ListBucketsCommand } = require('@aws-sdk/client-s3')
+
+const artworksRouter = require('./controller/artworks')
+const adminRouter = require('./controller/admin')
+
 
 
 const app = express()
@@ -21,15 +22,6 @@ async function connectToMongoose() {
    
 }
 
-async function connectToS3() {
-    try {
-        await s3.send(new ListBucketsCommand)
-        logger.info("Connected to S3")
-    } catch(error){
-        logger.error("Connection to S3 failed")
-        logger.error(error)
-    }
-}
 
 
 
@@ -50,6 +42,7 @@ app.use(express.json())
 app.use(middleware.requestLogger)
 
 app.use('/api/artwork',artworksRouter)
+app.use('/api/admin',adminRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

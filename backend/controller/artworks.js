@@ -1,5 +1,4 @@
 const artworksRouter = require('express').Router()
-
 const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3')
 const {getSignedUrl} = require('@aws-sdk/s3-request-presigner')
 const Artwork = require('../models/artwork')
@@ -10,7 +9,6 @@ const upload = multer({storage: multer.memoryStorage()})
 
 
 //get all images
-// 
 artworksRouter.get('/', async (request,response,next) => {
   try {
     const artwork = await Artwork.find({})
@@ -32,7 +30,8 @@ artworksRouter.get('/:id', async (request,response,next) => {
   }
 })
 
-//add image
+
+//add image metadata to DB
 artworksRouter.post('/', async (request,response,next) => {
   try {
     const body = request.body
@@ -60,7 +59,7 @@ artworksRouter.post('/', async (request,response,next) => {
 
 
 
-//delete image
+//delete image from S3 and delete metadata from DB
 artworksRouter.delete('/:id', async (req, res, next) => {
   const { id } = req.params
 
@@ -153,7 +152,7 @@ artworksRouter.post("/upload",upload.single("image"),async(req,res) => {
 })
 
 
-
+// get signedURl so frontend can upload file to S3
 artworksRouter.get("/upload-url/image", async (req,res) => {
   const fileType = req.query.type;
 
@@ -184,16 +183,7 @@ artworksRouter.get("/upload-url/image", async (req,res) => {
 
 })
 
-// artworksRouter.delete("/s3/image", async (req,res) => {
-//   const {key} = req.body
 
-//   await s3.send( new DeleteObjectCommand({
-//     Bucket: config.S3_BUCKET_NAME,
-//     Key: key
-//   }))
-
-//   res.send({success:true})
-// })
 
 
 
