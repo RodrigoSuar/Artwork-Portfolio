@@ -3,6 +3,7 @@ import artworkService from '../services/artwork'
 import { useEffect } from "react"
 import EditBox from "../components/EditBox"
 import adminService from '../services/admin'
+import './Admin.css'
 
 const Admin = () => {
     const [newArtwork, setNewArtwork] = useState({
@@ -14,12 +15,11 @@ const Admin = () => {
         key: '',
     })
     const [artwork,setArtworks] = useState([])
-    //const [admin,setAdmin] = useState(null)
     const [isPopUp, setIsPopUp] = useState(false)
     const [newTitle,setNewTitle] = useState('')
     const [id, setId] = useState("")
-
     const [imageFile,setImageFile] = useState(null)
+    const [uploadSuccess, setUploadSuccess] = useState(false)
 
     useEffect(() => {
         artworkService.getAll()
@@ -29,7 +29,6 @@ const Admin = () => {
 
         if(loggedUserJSON){
             const admin = JSON.parse(loggedUserJSON)
-            //setAdmin(admin)
             adminService.setToken(admin.token)
         }
         
@@ -39,12 +38,8 @@ const Admin = () => {
     const addArtwork = async (event) => {
          event.preventDefault()
 
-
          const urls = await adminService.createURL(imageFile)
-
-         console.log(urls)
-
-        await adminService.uploadFile(imageFile,urls.uploadURL)
+         await adminService.uploadFile(imageFile,urls.uploadURL)
 
          const artworkObject = {
             title: newArtwork.title,
@@ -53,7 +48,6 @@ const Admin = () => {
             key: urls.key
          }
 
-         //console.log(artworkObject)
          adminService.create(artworkObject).then((returnedArtworkObject) =>{
             setNewArtwork({
                 title: '',
@@ -63,15 +57,12 @@ const Admin = () => {
                 id: '',
                 key: '',
             })
-             setArtworks([...artwork,returnedArtworkObject])
-
-           
+            setImageFile(null)
+            setArtworks([...artwork,returnedArtworkObject])
+            setUploadSuccess(true)
+            setTimeout(() => setUploadSuccess(false), 3000)
          })
     }
-
-    
-
-    
 
     const handleArtworkChange = (event) => { 
         const {name,value} = event.target 
@@ -79,7 +70,6 @@ const Admin = () => {
             ...newArtwork,
              [name]:value 
             })
-    
     }
 
     const handleFileChange = (event) => {
@@ -92,17 +82,16 @@ const Admin = () => {
             return;
         }
         
-
         setImageFile(file)
-        
     }
 
     const deleteArtwork = (id) => {
-        adminService.remove(id).then(() => {
-            setArtworks(artwork.filter(a => a.id !== id))
-        })
+        if(window.confirm("Are you sure you want to delete this artwork?")) {
+            adminService.remove(id).then(() => {
+                setArtworks(artwork.filter(a => a.id !== id))
+            })
+        }
     }
-    
 
     const handleUpdate = (id) => {
         setIsPopUp(true)
@@ -120,76 +109,92 @@ const Admin = () => {
         .then(returnedArtwork => {
             setArtworks(artwork.map(n => (n.id !== id ? n : returnedArtwork)))
         })
-        .catch(() => {
-            setArtworks(artwork.filter(n => n.id !== id))
-        })
     }
 
     const handleTitleChange = (event) => {
         setNewTitle(event.target.value)
     }
 
-   
-    
-
     return (
         <div className="adminPage">
-            welcome to admin pages
+            <h2>Admin Dashboard</h2>
+            <p>Manage your artwork collection</p>
+
+            {uploadSuccess && <div className="success">Artwork uploaded successfully!</div>}
 
             <form onSubmit={addArtwork} className="addImage">
-                <label>Photo title</label>
-                <input 
-                    name='title' 
-                    value ={newArtwork.title} 
-                    onChange={handleArtworkChange} 
-                    required
-                />
-
-                <label>Photo description</label>
-                <input 
-                    name = 'description' 
-                    value = {newArtwork.description} 
-                    onChange={handleArtworkChange} 
-                    required/>
-
-                <label>Upload photo</label>
-                <input 
-                    type="file" 
-                    name="image"
-                    onChange={handleFileChange}
-                    required
+                <h3>Add New Artwork</h3>
+                
+                <div className="form-group">
+                    <label>Photo Title</label>
+                    <input 
+                        name='title' 
+                        value ={newArtwork.title} 
+                        onChange={handleArtworkChange}
+                        placeholder="Enter artwork title"
+                        required
                     />
+                </div>
 
+                <div className="form-group">
+                    <label>Description</label>
+                    <textarea
+                        name="description" 
+                        value={newArtwork.description} 
+                        onChange={handleArtworkChange}
+                        placeholder="Describe your artwork"
+                        required
+                    ></textarea>
+                </div>
 
-                <button type="submit">save</button>
+                <div className="form-group">
+                    <label>Upload Image</label>
+                    <input 
+                        type="file" 
+                        name="image"
+                        onChange={handleFileChange}
+                        required
+                    />
+                    {imageFile && <p className="file-selected-text">Selected: {imageFile.name}</p>}
+                </div>
+
+                <button type="submit">Upload Artwork</button>
             </form>
 
-            
-
-            <div className="gallery">
-                {artwork.map(art =>(
-                    <div key={art.id} className="artwork-card">
-                        <img src={art.image} alt={art.title} />
-                        <h3>{art.title}</h3>
-                        <p>{`${art.description}`}</p>
-                        <button onClick={() => deleteArtwork(art.id)}>Delete</button>
-                        <button onClick={() => handleUpdate(art.id)}>Update</button>
-                    </div>
-                ))}
-
+            <div>
+                <h3>Your Artworks</h3>
+                <p className="artwork-count">Total artworks: {artwork.length}</p>
+                
+                <div className="gallery">
+                    {artwork.map(art =>(
+                        <div key={art.id} className="artwork-card">
+                            <img src={art.image} alt={art.title} />
+                            <h3>{art.title}</h3>
+                            <p>{art.description}</p>
+                            <div className="button-group">
+                                <button onClick={() => handleUpdate(art.id)}>
+                                    Edit
+                                </button>
+                                <button 
+                                    onClick={() => deleteArtwork(art.id)}
+                                    className="danger"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             {isPopUp && (
                 <EditBox
-                title={newTitle}
-                setIsPopUp={setIsPopUp}
-                handleTitleChange={handleTitleChange}
-                update={update}
+                    title={newTitle}
+                    setIsPopUp={setIsPopUp}
+                    handleTitleChange={handleTitleChange}
+                    update={update}
                 />
             )}
-
-
-
         </div>
     )
 }

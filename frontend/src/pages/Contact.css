@@ -1,0 +1,39 @@
+/* Contact Page Styles */
+
+.contact-container {
+  max-width: 500px;
+  margin: 2rem auto;
+}
+
+.form-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e8e8e8;
+  border-top: 3px solid #c19a6b;
+}
+
+.form-container h2 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #1a1a1a;
+  font-size: 1.8rem;
+}
+
+.form-container p {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.form-container button {
+  width: 100%;
+  padding: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-container {
+    max-width: 100%;
+  }
+}

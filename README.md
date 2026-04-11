@@ -4,30 +4,465 @@
 
 ![Status](https://img.shields.io/badge/status-active-success.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Node Version](https://img.shields.io/badge/node-%3E%3D18.x-brightgreen.svg)
-![React Version](https://img.shields.io/badge/react-18%2B-61dafb.svg)
+![Node.js](https://img.shields.io/badge/node-%3E%3D18.x-brightgreen.svg)
+![React](https://img.shields.io/badge/react-19+-61dafb.svg)
+![MongoDB](https://img.shields.io/badge/mongodb-latest-13aa52.svg)
 
-## 📋 Table of Contents
+## 📚 Table of Contents
 
-- [Overview](#overview)
-- [Quick Start](#quick-start)
-- [Features](#core-features)
-- [Tech Stack](#technology-stack)
-- [Architecture](#architecture--design-patterns)
-- [Prerequisites](#prerequisites--requirements)
-- [Installation](#installation--setup)
-- [Running the App](#running-the-application)
-- [API Documentation](#api-documentation)
-- [npm Scripts](#npm-scripts-reference)
-- [Testing](#testing--quality-assurance)
-- [Deployment](#deployment)
-- [Troubleshooting](#troubleshooting--faq)
-- [Contributing](#contributing)
-- [License](#license)
+- [Project Overview](#-project-overview)
+- [Key Features](#-key-features)
+- [Technology Stack](#-technology-stack)
+- [Architecture & Design Patterns](#-architecture--design-patterns)
+- [Getting Started](#-getting-started)
+- [Project Structure](#-project-structure)
+- [API Documentation](#-api-documentation)
+- [Development Practices](#-development-practices)
+- [Performance & Security](#-performance--security)
+- [Future Enhancements](#-future-enhancements)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 ---
 
-## 📋 Overview
+## 🎯 Project Overview
+
+**Artwork Portfolio** is a sophisticated full-stack application designed for artists and photographers to showcase their work through an elegant, user-friendly interface. The application combines a modern React frontend with a robust Express.js backend, featuring real-time image management, secure authentication, and cloud storage integration.
+
+### Use Cases
+- Artist portfolios and online galleries
+- Photography showcases
+- Creative professional portfolios
+- Gallery management systems
+
+---
+
+## ✨ Key Features
+
+### Frontend
+- **Responsive Gallery View** - Automatic responsive grid that adapts to all screen sizes (mobile, tablet, desktop)
+- **Modern UI Design** - Clean, gallery-optimized aesthetic with warm accent colors
+- **Component-Based Architecture** - Modular, reusable components for scalability
+- **Admin Dashboard** - Full CRUD interface for artwork management with image upload
+- **Authentication System** - JWT-based secure login with localStorage persistence
+- **Real-time Feedback** - Success/error messages with smooth animations
+- **Optimized CSS Structure** - Component-scoped and global stylesheets following industry best practices
+
+### Backend
+- **RESTful API** - Clean, well-structured endpoints following REST conventions
+- **Database Management** - MongoDB with Mongoose ODM for schema validation and type safety
+- **Authentication & Authorization** - JWT token-based security with bcrypt password hashing
+- **Image Processing** - AWS S3 integration for scalable cloud storage
+- **Error Handling** - Comprehensive error handling with meaningful error responses
+- **Request Logging** - Detailed logging for debugging and monitoring
+- **CORS & Security Headers** - Production-ready security configurations
+
+---
+
+## 🛠 Technology Stack
+
+### Frontend
+| Technology | Purpose | Version |
+|-----------|---------|---------|
+| **React** | UI Library | 19.2+ |
+| **Vite** | Build tool & dev server | 7.3+ |
+| **React Router** | Client-side routing | 7.13+ |
+| **Axios** | HTTP client | 1.13+ |
+| **CSS3** | Styling (modular architecture) | Latest |
+
+### Backend
+| Technology | Purpose | Version |
+|-----------|---------|---------|
+| **Express.js** | Web framework | 5.2+ |
+| **Node.js** | Runtime | 18+ |
+| **MongoDB** | Database | Latest |
+| **Mongoose** | ODM & Schemas | 9.3+ |
+| **JWT** | Authentication | 9.0+ |
+| **Bcrypt** | Password hashing | 6.0+ |
+| **AWS SDK** | Cloud storage | 3.1+ |
+
+### Development Tools
+| Tool | Purpose |
+|------|---------|
+| **ESLint** | Code linting & quality |
+| **Supertest** | API testing |
+| **Dotenv** | Environment configuration |
+| **Multer** | File upload middleware |
+
+---
+
+## 🏗 Architecture & Design Patterns
+
+### Frontend Architecture
+```
+src/
+├── components/        # Reusable UI components
+│   ├── Nav.jsx       # Navigation with routing
+│   ├── ArtworkCard.jsx # Gallery card component
+│   └── EditBox.jsx    # Modal for editing
+├── pages/             # Page components
+│   ├── Home.jsx      # Hero landing page
+│   ├── Gallery.jsx   # Main gallery view
+│   ├── Contact.jsx   # Contact form
+│   ├── Admin.jsx     # Admin dashboard
+│   └── AdminLogin.jsx # Authentication
+├── services/          # API communication layer
+│   ├── artwork.js    # Artwork API calls
+│   ├── admin.js      # Admin API calls
+│   └── login.js      # Authentication API calls
+└── styles/           # Modular CSS architecture
+    └── global.css    # Global styles & resets
+```
+
+### Backend Architecture
+```
+backend/
+├── controller/        # Route handlers
+│   ├── artworks.js   # Artwork endpoints
+│   ├── admin.js      # Admin operations
+│   └── login.js      # Authentication
+├── models/           # Mongoose schemas
+│   ├── artwork.js    # Artwork schema
+│   └── admin.js      # Admin schema
+├── services/         # Business logic
+│   └── s3.js         # AWS S3 integration
+├── utils/            # Utility functions
+│   ├── config.js     # Environment configuration
+│   ├── logger.js     # Logging utility
+│   └── middleware.js # Express middleware
+└── tests/            # Testing suite
+    └── artwork_api.test.js
+```
+
+### Key Design Patterns
+
+1. **MVC Pattern** - Clear separation of Model, View, Controller
+2. **Service Layer** - Dedicated API communication layer in frontend
+3. **Middleware Pattern** - Request logging, authentication, error handling
+4. **Modular CSS** - Component-scoped styles with global utilities
+5. **Async/Await** - Modern asynchronous code patterns
+6. **Error Handling** - Centralized error handling middleware
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites & Requirements
+
+- **Node.js** ≥ 18.x
+- **npm** ≥ 9.x
+- **MongoDB** (local or Atlas cloud)
+- **AWS S3 Bucket** (for image storage)
+
+### Installation & Setup
+
+#### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd Artwork-Portfolio
+```
+
+#### 2. Backend Setup
+```bash
+cd backend
+
+# Install dependencies
+npm install
+
+# Configure environment variables
+cp .env.example .env
+# Edit .env with your configuration:
+# - MONGODB_URI
+# - JWT_SECRET
+# - AWS_ACCESS_KEY_ID
+# - AWS_SECRET_ACCESS_KEY
+# - AWS_REGION
+# - AWS_BUCKET_NAME
+```
+
+#### 3. Frontend Setup
+```bash
+cd ../frontend
+
+# Install dependencies
+npm install
+
+# Configure environment variables if needed (optional)
+```
+
+#### 4. Run Development Servers
+
+**Backend** (from backend directory):
+```bash
+npm run dev
+# Server runs on http://localhost:3001
+```
+
+**Frontend** (from frontend directory in new terminal):
+```bash
+npm run dev
+# Vite dev server runs on http://localhost:5173
+```
+
+#### 5. Production Build
+```bash
+cd backend
+npm run build:ui  # Builds frontend and copies to backend/dist
+npm start         # Starts production server
+```
+
+---
+
+## 📁 Project Structure
+
+### Frontend Directory Tree
+```
+frontend/
+├── public/                      # Static assets
+├── src/
+│   ├── App.jsx                 # Main app component with routing
+│   ├── App.css                 # Central CSS imports
+│   ├── main.jsx                # Entry point
+│   ├── components/
+│   │   ├── Nav.jsx             # Navigation component
+│   │   ├── Nav.css             # Navigation styles
+│   │   ├── ArtworkCard.jsx     # Card component
+│   │   ├── ArtworkCard.css     # Card styles
+│   │   ├── EditBox.jsx         # Modal component
+│   │   ├── EditBox.css         # Modal styles
+│   │   ├── ProtectedRoute.jsx  # Route protection wrapper
+│   │
+│   ├── pages/
+│   │   ├── Home.jsx/css        # Landing page
+│   │   ├── Gallery.jsx/css     # Main gallery
+│   │   ├── Contact.jsx/css     # Contact form
+│   │   ├── Admin.jsx/css       # Admin dashboard
+│   │   └── AdminLogin.jsx/css  # Login page
+│   │
+│   ├── services/
+│   │   ├── artwork.js          # Artwork API service
+│   │   ├── admin.js            # Admin API service
+│   │   └── login.js            # Auth service
+│   │
+│   └── styles/
+│       └── global.css          # Global styles & resets
+│
+├── vite.config.js              # Vite configuration
+└── package.json                # Dependencies & scripts
+```
+
+### Backend Directory Tree
+```
+backend/
+├── app.js                       # Express app setup
+├── index.js                     # Server entry point
+├── package.json                 # Dependencies & scripts
+├── .env.example                 # Environment template
+│
+├── controller/
+│   ├── artworks.js             # GET/POST artwork routes
+│   ├── admin.js                # Admin CRUD routes
+│   └── login.js                # Authentication routes
+│
+├── models/
+│   ├── artwork.js              # Artwork MongoDB schema
+│   └── admin.js                # Admin MongoDB schema
+│
+├── services/
+│   └── s3.js                   # AWS S3 integration
+│
+├── utils/
+│   ├── config.js               # Config management
+│   ├── logger.js               # Logging utility
+│   └── middleware.js           # Express middleware
+│
+└── tests/
+    └── artwork_api.test.js     # API tests with Supertest
+```
+
+---
+
+## 🔌 API Documentation
+
+### Base URL
+```
+Development: http://localhost:3001
+Production: <deployed-url>
+```
+
+### Endpoints
+
+#### Artworks (Public)
+```
+GET  /api/artwork              # Get all artworks
+GET  /api/artwork/:id          # Get specific artwork
+```
+
+#### Admin Operations (Authenticated)
+```
+POST   /api/admin              # Create new artwork
+PUT    /api/admin/:id          # Update artwork
+DELETE /api/admin/:id          # Delete artwork
+```
+
+#### Authentication
+```
+POST /api/login                # Admin login
+```
+
+### Authentication
+All admin endpoints require JWT token in Authorization header:
+```
+Authorization: Bearer <token>
+```
+
+---
+
+## 💻 Development Practices
+
+### Code Quality
+- **ESLint** - Enforces code style and catches errors
+- **Modular CSS** - Component-scoped stylesheets for maintainability
+- **Service Layer** - API calls isolated from components
+- **Error Boundaries** - Graceful error handling and user feedback
+
+### Testing
+```bash
+# Run tests
+npm test
+
+# Run tests with coverage
+npm test -- --coverage
+```
+
+### Git Workflow
+```bash
+# Feature branches
+git checkout -b feature/feature-name
+
+# Commit with meaningful messages
+git commit -m "feat: add new feature"
+
+# Push and create PR
+git push origin feature/feature-name
+```
+
+---
+
+## 🔒 Performance & Security
+
+### Security Features
+- ✅ **JWT Authentication** - Secure token-based auth
+- ✅ **Password Hashing** - Bcrypt with salt rounds
+- ✅ **CORS Protection** - Configured allowed origins
+- ✅ **Input Validation** - Mongoose schema validation
+- ✅ **Error Sanitization** - No sensitive data in error messages
+- ✅ **AWS IAM** - S3 access controlled via IAM policies
+
+### Performance Optimizations
+- ✅ **Responsive Images** - Optimized for all devices
+- ✅ **Cloud Storage** - S3 for scalable image hosting
+- ✅ **Database Indexing** - MongoDB indexes on frequently queried fields
+- ✅ **CSS Optimization** - Modular, scoped stylesheets
+- ✅ **Lazy Loading** - Component-based code splitting with React Router
+- ✅ **Vite Build Tool** - Fast development and optimized production builds
+
+---
+
+## 🎓 What This Project Demonstrates
+
+### Full-Stack Development
+- End-to-end feature implementation from database to UI
+- Understanding of both frontend and backend ecosystems
+- API design and consumption
+
+### Modern React Practices
+- Functional components with hooks
+- React Router for client-side routing
+- Component composition and reusability
+- State management with hooks
+
+### Node.js & Express
+- RESTful API design
+- Middleware architecture
+- Error handling patterns
+- Database integration
+
+### Cloud & DevOps
+- AWS S3 integration for scalable storage
+- Environment configuration management
+- API token generation and validation
+
+### UI/UX Design
+- Responsive design principles
+- User feedback mechanisms
+- Accessibility considerations
+- Modern design patterns
+
+---
+
+## 🚀 Future Enhancements
+
+- [ ] **Image Optimization** - Automatic resizing and compression
+- [ ] **Advanced Search** - Full-text search for artworks
+- [ ] **Categories & Tags** - Better organization and filtering
+- [ ] **Sharing Features** - Social media integration
+- [ ] **Analytics** - Track gallery views and traffic
+- [ ] **Comments System** - User engagement features
+- [ ] **Donation Integration** - Support for creators
+- [ ] **Dark Mode** - Theme toggle support
+- [ ] **Progressive Web App** - PWA capabilities
+- [ ] **API Rate Limiting** - Prevent abuse
+- [ ] **Caching Strategy** - Redis for performance
+- [ ] **Webhooks** - Real-time notifications
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Code Style
+- Follow ESLint configuration
+- Use meaningful variable and function names
+- Add comments for complex logic
+- Keep components focused and single-responsibility
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+## 👤 Author
+
+**Rodrigo** - Full-stack developer passionate about creating beautiful, functional web applications.
+
+---
+
+## 📞 Support
+
+For issues, questions, or suggestions:
+1. Check existing GitHub issues
+2. Create a detailed issue with context
+3. Include steps to reproduce bugs
+
+---
+
+## 🙏 Acknowledgments
+
+- Express.js and Node.js communities
+- React and Vite teams
+- AWS for S3 infrastructure
+- MongoDB for outstanding database technology
 
 A **comprehensive full-stack art portfolio application** that demonstrates professional software engineering practices. This project showcases a complete MERN (MongoDB, Express, React, Node.js) architecture with authentication, admin panel functionality, RESTful API design, and production-ready code organization.
 

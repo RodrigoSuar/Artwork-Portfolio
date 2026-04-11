@@ -1,7 +1,8 @@
 import { useState } from "react"
 import loginService from '../services/login'
 import adminService from '../services/admin'
-import { Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom"
+import './AdminLogin.css'
 
 const AdminLogin = () => {
     const [username,setUsername] = useState('')
@@ -20,7 +21,7 @@ const AdminLogin = () => {
             setUser(admin)
             setUsername('')
             setPassword('')
-            return <Navigate to="/"/>
+            return <Navigate to="/admin"/>
         } catch {
             setError(true)
             
@@ -32,37 +33,44 @@ const AdminLogin = () => {
 
     const errorMessage = () => (
         <div className="error">
-            Incorect Username or Password
+            Incorrect Username or Password
         </div>
     )
 
     return (
-       <div>
-        <h2>Login</h2>
-        <form onSubmit={handleLogin}>
-            <div>
-                <label>
-                    username
-                    <input
-                        type='text'
-                        value={username}
-                        onChange={({target}) => setUsername(target.value)}
-                    />
-                </label>
-            </div>
-            <div>
-                <label>
-                    password
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={({target}) => setPassword(target.value)}
-                    />
-                </label>
-            </div>
-            <button type="submin">login</button>
-        </form>
+       <div className="form-container">
+        <h2>Admin Login</h2>
+        <p>
+            Access your admin dashboard
+        </p>
+        
         {error && errorMessage()}
+        
+        <form onSubmit={handleLogin}>
+            <div className="form-group">
+                <label>Username</label>
+                <input
+                    type='text'
+                    name="username"
+                    value={username}
+                    onChange={({target}) => setUsername(target.value)}
+                    placeholder="Enter your username"
+                    required
+                />
+            </div>
+            <div className="form-group">
+                <label>Password</label>
+                <input
+                    type="password"
+                    name="password"
+                    value={password}
+                    onChange={({target}) => setPassword(target.value)}
+                    placeholder="Enter your password"
+                    required
+                />
+            </div>
+            <button type="submit" style={{ width: "100%", padding: "0.875rem" }}>Login</button>
+        </form>
 
         {user &&  <Navigate to="/admin"/>}
        </div>

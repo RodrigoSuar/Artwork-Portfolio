@@ -1,0 +1,80 @@
+/* Artwork Card Component Styles */
+
+.artwork-card {
+  background: white;
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e8e8e8;
+  cursor: pointer;
+  position: relative;
+}
+
+.artwork-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #c19a6b;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+.artwork-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.artwork-card:hover img {
+  transform: scale(1.02);
+}
+
+.artwork-card h3 {
+  padding: 1.2rem;
+  font-size: 1.1rem;
+  color: #1a1a1a;
+  margin: 0;
+  font-weight: 600;
+}
+
+.artwork-card p {
+  padding: 0 1.2rem 1.2rem;
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.artwork-card:hover {
+  transform: translateY(-4px);
+  border-color: #c19a6b;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.artwork-card:hover::before {
+  opacity: 1;
+}
+
+.artwork-card a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .artwork-card img {
+    height: 220px;
+  }
+}
+
+@media (max-width: 480px) {
+  .artwork-card img {
+    height: 200px;
+  }
+}

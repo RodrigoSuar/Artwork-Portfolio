@@ -1,0 +1,102 @@
+/* Admin Page Styles */
+
+.adminPage {
+  background: white;
+  padding: 2rem;
+  border-radius: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e8e8e8;
+}
+
+.adminPage h2 {
+  margin-bottom: 0.5rem;
+  color: #1a1a1a;
+  font-size: 2rem;
+}
+
+.adminPage > p {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.adminPage h3 {
+  color: #1a1a1a;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* Add Image Form Section */
+.addImage {
+  background: #fafafa;
+  padding: 2rem;
+  border-radius: 0;
+  margin-bottom: 2rem;
+  border: 2px dashed #c19a6b;
+}
+
+.addImage h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #c19a6b;
+}
+
+.addImage label {
+  color: #333;
+}
+
+.addImage button {
+  margin-top: 1rem;
+}
+
+.file-selected-text {
+  font-size: 0.9rem;
+  color: #c19a6b;
+  margin-top: 0.5rem;
+}
+
+/* Artwork Count */
+.artwork-count {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+/* Artwork Cards in Admin */
+.single-artwork-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.single-artwork-card button {
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.button-group button {
+  flex: 1;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .adminPage {
+    padding: 1.5rem;
+  }
+
+  .addImage {
+    padding: 1.5rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .button-group button {
+    width: 100%;
+  }
+}

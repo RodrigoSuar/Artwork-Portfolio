@@ -1,0 +1,45 @@
+/* Edit Box Modal Styles */
+
+.edit-box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.edit-box-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 0;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  max-width: 400px;
+  width: 90%;
+  border: 1px solid #e8e8e8;
+  border-top: 3px solid #c19a6b;
+}
+
+.edit-box-header {
+  font-weight: 700;
+  color: #1a1a1a;
+  display: block;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 1.1rem;
+}
+
+.edit-box form input {
+  margin-bottom: 1.5rem;
+}
+
+.edit-box form button {
+  margin-right: 0.5rem;
+  margin-top: 1rem;
+}
