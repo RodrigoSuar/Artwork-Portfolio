@@ -1,33 +1,32 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const artworkSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true
+    required: true,
   },
-  image:{
+  image: {
     type: String,
-    required: true
+    required: true,
   },
   description: {
     type: String,
-    minLength: 10
+    minLength: 10,
   },
   year: String,
 
   key: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
+});
 
-})
-
-artworkSchema.set('toJSON', {
+artworkSchema.set("toJSON", {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()
-    delete returnedObject._id
-    delete returnedObject.__v
-  }
-})
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
 
-module.exports = mongoose.model('Artwork',artworkSchema)
+module.exports = mongoose.model("Artwork", artworkSchema);

@@ -1,24 +1,23 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const config = require('./utils/config')
-const logger = require('./utils/logger')
-const middleware = require('./utils/middleware')
+const express = require("express");
+const mongoose = require("mongoose");
+const config = require("./utils/config");
+const logger = require("./utils/logger");
+const middleware = require("./utils/middleware");
+
+const artworksRouter = require("./controller/artworks");
+const adminRouter = require("./controller/admin");
+const loginRouter = require("./controller/login");
 
 
-const artworksRouter = require('./controller/artworks')
-const adminRouter = require('./controller/admin')
+const app = express();
 
-
-
-const app = express()
-
-logger.info('connecting to' , config.MONGODB_URI)
+logger.info("connecting to" , config.MONGODB_URI);
 
 
 
 async function connectToMongoose() {
     await mongoose.connect(config.MONGODB_URI);
-    logger.info("Connected to MongoDB") 
+    logger.info("Connected to MongoDB");
    
 }
 
@@ -26,10 +25,10 @@ async function connectToMongoose() {
 
 
 try{
-    connectToMongoose()
+    connectToMongoose();
 
 } catch (error){
-    logger.error(error)
+    logger.error(error);
 }
 
 
@@ -37,14 +36,16 @@ try{
 
 
 
-app.use(express.static('dist'))
-app.use(express.json())
-app.use(middleware.requestLogger)
+app.use(express.static("dist"));
+app.use(express.json());
+app.use(middleware.requestLogger);
+app.use(middleware.getTokenFrom);
 
-app.use('/api/artwork',artworksRouter)
-app.use('/api/admin',adminRouter)
 
-app.use(middleware.unknownEndpoint)
-app.use(middleware.errorHandler)
+app.use("/api/artwork",artworksRouter);
+app.use("/api/admin",adminRouter);
+app.use("/api/login",loginRouter);
+app.use(middleware.unknownEndpoint);
+app.use(middleware.errorHandler);
 
-module.exports = app
+module.exports = app;

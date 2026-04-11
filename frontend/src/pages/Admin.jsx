@@ -2,6 +2,7 @@ import { useState } from "react"
 import artworkService from '../services/artwork'
 import { useEffect } from "react"
 import EditBox from "../components/EditBox"
+import adminService from '../services/admin'
 
 const Admin = () => {
     const [newArtwork, setNewArtwork] = useState({
@@ -13,7 +14,7 @@ const Admin = () => {
         key: '',
     })
     const [artwork,setArtworks] = useState([])
-
+    //const [admin,setAdmin] = useState(null)
     const [isPopUp, setIsPopUp] = useState(false)
     const [newTitle,setNewTitle] = useState('')
     const [id, setId] = useState("")
@@ -24,6 +25,14 @@ const Admin = () => {
         artworkService.getAll()
             .then(data => setArtworks(data))
         
+        const loggedUserJSON = window.localStorage.getItem('loggedAdmin')
+
+        if(loggedUserJSON){
+            const admin = JSON.parse(loggedUserJSON)
+            //setAdmin(admin)
+            adminService.setToken(admin.token)
+        }
+        
     },[])
     
     
@@ -31,11 +40,11 @@ const Admin = () => {
          event.preventDefault()
 
 
-         const urls = await artworkService.createURL(imageFile)
+         const urls = await adminService.createURL(imageFile)
 
          console.log(urls)
 
-        await artworkService.uploadFile(imageFile,urls.uploadURL)
+        await adminService.uploadFile(imageFile,urls.uploadURL)
 
          const artworkObject = {
             title: newArtwork.title,
@@ -45,7 +54,7 @@ const Admin = () => {
          }
 
          //console.log(artworkObject)
-         artworkService.create(artworkObject).then((returnedArtworkObject) =>{
+         adminService.create(artworkObject).then((returnedArtworkObject) =>{
             setNewArtwork({
                 title: '',
                 image: '',
@@ -89,7 +98,7 @@ const Admin = () => {
     }
 
     const deleteArtwork = (id) => {
-        artworkService.remove(id).then(() => {
+        adminService.remove(id).then(() => {
             setArtworks(artwork.filter(a => a.id !== id))
         })
     }
@@ -106,7 +115,7 @@ const Admin = () => {
         const art = artwork.find(n => n.id === id)
         const updatedArt = {...art,title:newTitle}
 
-        artworkService
+        adminService
         .update(id,updatedArt)
         .then(returnedArtwork => {
             setArtworks(artwork.map(n => (n.id !== id ? n : returnedArtwork)))

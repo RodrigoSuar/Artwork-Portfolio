@@ -1,19 +1,19 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const adminSchema = new mongoose.Schema({
     username: String,
-    passwordHash: String
-})
+    passwordHash: String,
+});
 
-adminSchema.set('toJSON', {
+adminSchema.set("toJSON", {
     transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString()
-        delete returnedObject._id
-        delete returnedObject.__v
-        delete returnedObject.passwordHash
-    }
-})
+        returnedObject.id = returnedObject._id.toString();
+        delete returnedObject._id;
+        delete returnedObject.__v;
+        delete returnedObject.passwordHash;
+    },
+});
 
-const Admin = mongoose.model('Admin', adminSchema)
+const Admin = mongoose.model("Admin", adminSchema);
 
-module.exports = Admin
+module.exports = Admin;
