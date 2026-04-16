@@ -1,12 +1,9 @@
 const artworksRouter = require("express").Router();
-const { PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const Artwork = require("../models/artwork");
 //const multer = require("multer")
-const config = require("../utils/config");
-const s3 = require("../services/s3");
+
 //const upload = multer({storage: multer.memoryStorage()})
-const jwt = require("jsonwebtoken");
+
 
 //get all images
 artworksRouter.get("/", async (request, response, next) => {
@@ -18,16 +15,36 @@ artworksRouter.get("/", async (request, response, next) => {
   }
 });
 
-//retrieve spcific image
-artworksRouter.get("/:id", async (request, response, next) => {
+artworksRouter.get("/:page/:limit", async (request,response , next) => {
   try {
-    const id = request.params.id;
-    const artwork = await Artwork.findById(id);
-    response.json(artwork);
-  } catch (error) {
+    const page = parseInt(request.params.page, 10) || 1;
+    const l = parseInt(request.params.limit);
+    const limit = l < 20 
+      ? l
+      : 20;
+    const skip = (page-1) *limit;
+    const artwork = await Artwork.find({})
+    .skip(skip)
+    .limit(limit);
+    const total = await Artwork.countDocuments({});
+    response.json({ artworks: artwork, total });
+  } catch (error){
     next(error);
   }
 });
+
+
+
+//retrieve spcific image
+// artworksRouter.get("/:id", async (request, response, next) => {
+//   try {
+//     const id = request.params.id;
+//     const artwork = await Artwork.findById(id);
+//     response.json(artwork);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 
 module.exports = artworksRouter;

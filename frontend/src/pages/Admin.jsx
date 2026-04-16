@@ -1,8 +1,8 @@
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import artworkService from '../services/artwork'
-import { useEffect } from "react"
 import EditBox from "../components/EditBox"
 import adminService from '../services/admin'
+import Pagination from "../components/Pagination"
 import './Admin.css'
 
 const Admin = () => {
@@ -14,6 +14,7 @@ const Admin = () => {
         year: '',
         key: '',
     })
+
     const [artwork,setArtworks] = useState([])
     const [isPopUp, setIsPopUp] = useState(false)
     const [newTitle,setNewTitle] = useState('')
@@ -21,9 +22,18 @@ const Admin = () => {
     const [imageFile,setImageFile] = useState(null)
     const [uploadSuccess, setUploadSuccess] = useState(false)
 
+    const [page, setPage] = useState(1)
+    const [limit, setLimit] = useState(10)
+    const [total, setTotal] = useState(0)
+
+    const fileInputRef = useRef(null)
+
     useEffect(() => {
-        artworkService.getAll()
-            .then(data => setArtworks(data))
+        artworkService.getAll(page, limit)
+            .then(data => {
+                setArtworks(data.artworks)
+                setTotal(data.total)
+            })
         
         const loggedUserJSON = window.localStorage.getItem('loggedAdmin')
 
@@ -32,10 +42,11 @@ const Admin = () => {
             adminService.setToken(admin.token)
         }
         
-    },[])
+    },[page, limit])
     
     
     const addArtwork = async (event) => {
+        try{
          event.preventDefault()
 
          const urls = await adminService.createURL(imageFile)
@@ -57,11 +68,20 @@ const Admin = () => {
                 id: '',
                 key: '',
             })
+
             setImageFile(null)
+
+            if(fileInputRef.current) {
+                fileInputRef.current.value = ''
+            }
+
             setArtworks([...artwork,returnedArtworkObject])
             setUploadSuccess(true)
             setTimeout(() => setUploadSuccess(false), 3000)
-         })
+         })   
+        } catch (error){
+            console.error(error)
+        }
     }
 
     const handleArtworkChange = (event) => { 
@@ -69,7 +89,7 @@ const Admin = () => {
         setNewArtwork({ 
             ...newArtwork,
              [name]:value 
-            })
+        })
     }
 
     const handleFileChange = (event) => {
@@ -79,7 +99,7 @@ const Admin = () => {
 
         if(!file.type.startsWith("image/")){
             alert("Please upload an image file")
-            return;
+            return
         }
         
         setImageFile(file)
@@ -101,6 +121,7 @@ const Admin = () => {
     const update = (event) => {
         event.preventDefault()
         setIsPopUp(false)
+
         const art = artwork.find(n => n.id === id)
         const updatedArt = {...art,title:newTitle}
 
@@ -115,12 +136,18 @@ const Admin = () => {
         setNewTitle(event.target.value)
     }
 
+    const totalPages = Math.ceil(total / limit)
+
     return (
         <div className="adminPage">
             <h2>Admin Dashboard</h2>
             <p>Manage your artwork collection</p>
 
-            {uploadSuccess && <div className="success">Artwork uploaded successfully!</div>}
+            {uploadSuccess && (
+                <div className="success">
+                    Artwork uploaded successfully!
+                </div>
+            )}
 
             <form onSubmit={addArtwork} className="addImage">
                 <h3>Add New Artwork</h3>
@@ -144,7 +171,7 @@ const Admin = () => {
                         onChange={handleArtworkChange}
                         placeholder="Describe your artwork"
                         required
-                    ></textarea>
+                    />
                 </div>
 
                 <div className="form-group">
@@ -152,10 +179,16 @@ const Admin = () => {
                     <input 
                         type="file" 
                         name="image"
+                        ref={fileInputRef}
                         onChange={handleFileChange}
                         required
                     />
-                    {imageFile && <p className="file-selected-text">Selected: {imageFile.name}</p>}
+
+                    {imageFile && (
+                        <p className="file-selected-text">
+                            Selected: {imageFile.name}
+                        </p>
+                    )}
                 </div>
 
                 <button type="submit">Upload Artwork</button>
@@ -163,7 +196,18 @@ const Admin = () => {
 
             <div>
                 <h3>Your Artworks</h3>
-                <p className="artwork-count">Total artworks: {artwork.length}</p>
+                <p className="artwork-count">
+                    Total artworks: {total}
+                </p>
+
+                <Pagination
+                    page={page}
+                    totalPages={totalPages}
+                    total={total}
+                    limit={limit}
+                    setPage={setPage}
+                    setLimit={setLimit}
+                />
                 
                 <div className="gallery">
                     {artwork.map(art =>(
@@ -171,10 +215,14 @@ const Admin = () => {
                             <img src={art.image} alt={art.title} />
                             <h3>{art.title}</h3>
                             <p>{art.description}</p>
+
                             <div className="button-group">
-                                <button onClick={() => handleUpdate(art.id)}>
+                                <button 
+                                    onClick={() => handleUpdate(art.id)}
+                                >
                                     Edit
                                 </button>
+
                                 <button 
                                     onClick={() => deleteArtwork(art.id)}
                                     className="danger"
@@ -185,6 +233,15 @@ const Admin = () => {
                         </div>
                     ))}
                 </div>
+
+                <Pagination
+                    page={page}
+                    totalPages={totalPages}
+                    total={total}
+                    limit={limit}
+                    setPage={setPage}
+                    setLimit={setLimit}
+                />
             </div>
 
             {isPopUp && (

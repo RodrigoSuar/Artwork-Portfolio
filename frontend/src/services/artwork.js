@@ -1,9 +1,9 @@
 import axios from 'axios'
-const baseUrl = '/api/artwork'
+const baseUrl = `${import.meta.env.VITE_API_URL}/api/artwork`
 
 
-const getAll = () => {
-    const request = axios.get(baseUrl)
+const getAll = (page,limit) => {
+    const request = axios.get(`${baseUrl}/${page}/${limit}`)
     
     return request.then((response) => response.data)
 }

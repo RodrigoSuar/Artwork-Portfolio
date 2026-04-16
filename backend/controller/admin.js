@@ -13,6 +13,7 @@ const s3 = require("../services/s3");
 const jwt = require("jsonwebtoken");
 
 adminRouter.post("/register", async (req, res) => {
+  
     const { username, password } = req.body;
 
     const saltRounds = 10;
@@ -147,6 +148,7 @@ adminRouter.put("/:id", async (request, response, next) => {
 // })
 
 // get signedURl so frontend can upload file to S3
+
 adminRouter.get("/upload-url/image", async (req, res, next) => {
   try {
     const decodedToken = jwt.verify(req.token, process.env.SECRET);
