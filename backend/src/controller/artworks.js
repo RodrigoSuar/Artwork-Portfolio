@@ -6,6 +6,7 @@ const Artwork = require("../models/artwork");
 
 
 //get all images
+//this is a testing route remove for production
 artworksRouter.get("/", async (request, response, next) => {
   try {
     const artwork = await Artwork.find({});

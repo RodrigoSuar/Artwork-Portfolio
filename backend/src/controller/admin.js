@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 
 const adminRouter = require("express").Router();
 
-const Admin = require("../models/admin");
+
 const { PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const Artwork = require("../models/artwork");
@@ -12,22 +12,22 @@ const s3 = require("../services/s3");
 //const upload = multer({storage: multer.memoryStorage()})
 const jwt = require("jsonwebtoken");
 
-adminRouter.post("/register", async (req, res) => {
+// adminRouter.post("/register", async (req, res) => {
   
-    const { username, password } = req.body;
+//     const { username, password } = req.body;
 
-    const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(password, saltRounds);
+//     const saltRounds = 10;
+//     const passwordHash = await bcrypt.hash(password, saltRounds);
 
-    const admin = new Admin({
-        username,
-        passwordHash,
-    });
+//     const admin = new Admin({
+//         username,
+//         passwordHash,
+//     });
 
-    const savedAdmin = await admin.save();
+//     const savedAdmin = await admin.save();
 
-    res.status(201).json(savedAdmin);
-});
+//     res.status(201).json(savedAdmin);
+// });
 
 
 
@@ -158,12 +158,19 @@ adminRouter.get("/upload-url/image", async (req, res, next) => {
 
     const fileType = req.query.type;
 
-    
+    // Validate file type is an allowed image MIME type
+    const allowedMimeTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
+    if (!fileType || !allowedMimeTypes.includes(fileType)) {
+      return res.status(400).json({ error: "Invalid file type" });
+    }
 
     // Extract extension from type
     const extension = fileType.split("/")[1]; // "png", "jpeg"
 
-    const fileName = `image/${Date.now()}.${extension}`;
+    // Sanitize extension to prevent path traversal
+    const sanitizedExtension = extension.replace(/[^a-zA-Z0-9]/g, "");
+
+    const fileName = `image/${Date.now()}.${sanitizedExtension}`;
 
     const command = new PutObjectCommand({
       Bucket: config.S3_BUCKET_NAME,

@@ -13,6 +13,13 @@ const AWS_REGION = process.env.AWS_REGION;
 const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME;
 const S3_BUCKET_URL = process.env.S3_BUCKET_URL;
 
+const SECRET = process.env.SECRET;
+
+if(!SECRET){
+    console.error("FATAL ERROR: SECRET environment variable is not defined");
+    process.exit(1);
+}
+
 module.exports = {
     MONGODB_URI,
     PORT,
@@ -21,4 +28,5 @@ module.exports = {
     AWS_REGION,
     S3_BUCKET_NAME,
     S3_BUCKET_URL,
+    SECRET,
 };

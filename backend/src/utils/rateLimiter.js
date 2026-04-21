@@ -1,8 +1,8 @@
 const rateLimit = require("express-rate-limit");
 
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 60,
+  windowMs:  60 * 1000,
+  max: 25,
   handler: (req, res) => {
     console.log("Rate limit hit:", req.ip);
     res.status(429).json({
