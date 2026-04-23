@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = `${import.meta.env.VITE_API_URL}/api/artwork`
+const baseUrl = `/api/artwork`
 
 
 const getAll = (page,limit) => {
