@@ -51,7 +51,9 @@ app.use(middleware.getTokenFrom);
 
 
 app.use(cors({
-  origin: ["http://localhost:5173","http://127.0.0.1:5173"],
+  origin: process.env.NODE_ENV === "production" 
+    ? ["http://localhost:3000", "http://frontend"]  // Docker network
+    : ["http://localhost:5173","http://127.0.0.1:5173"],
 }));
 
 app.use("/api/artwork",rateLimit.apiLimiter);

@@ -1,16 +1,38 @@
-# version: "3.8"
+version: "3.8"
 
-# services:
-#   backend:
-#     build: ./backend
-#     ports:
-#       - "5000:5000"
-#     env_file:
-#       - ./backend/.env
+services:
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env.production
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
-#   frontend:
-#     build: ./frontend
-#     ports:
-#       - "3000:80"
-#     depends_on:
-#       - backend
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  app-network:
+    driver: bridge

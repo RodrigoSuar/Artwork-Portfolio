@@ -7,14 +7,14 @@ const Artwork = require("../models/artwork");
 
 //get all images
 //this is a testing route remove for production
-artworksRouter.get("/", async (request, response, next) => {
-  try {
-    const artwork = await Artwork.find({});
-    response.json(artwork);
-  } catch (error) {
-    next(error);
-  }
-});
+// artworksRouter.get("/", async (request, response, next) => {
+//   try {
+//     const artwork = await Artwork.find({});
+//     response.json(artwork);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 artworksRouter.get("/:page/:limit", async (request,response , next) => {
   try {

@@ -1,8 +1,4 @@
-const bcrypt = require("bcrypt");
-
 const adminRouter = require("express").Router();
-
-
 const { PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const Artwork = require("../models/artwork");
@@ -35,8 +31,7 @@ const jwt = require("jsonwebtoken");
 adminRouter.post("/", async (request, response, next) => {
   try {
     const body = request.body;
-    //const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
-    const decodedToken = jwt.verify(request.token, process.env.SECRET);
+    const decodedToken = jwt.verify(request.token, config.SECRET);
     if (!decodedToken.id) {
       return response.status(401).json({ error: "token invalid" });
     }
@@ -64,7 +59,7 @@ adminRouter.post("/", async (request, response, next) => {
 //delete image from S3 and delete metadata from DB
 adminRouter.delete("/:id", async (req, res, next) => {
   try {
-    const decodedToken = jwt.verify(req.token, process.env.SECRET);
+    const decodedToken = jwt.verify(req.token, config.SECRET);
     if (!decodedToken.id) {
       return res.status(401).json({ error: "token invalid" });
     }
