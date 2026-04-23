@@ -1,28 +1,22 @@
 import ArtworkCard from "../components/ArtworkCard"
-import { useEffect, useState } from "react"
-import artworkService from '../services/artwork'
+import { useState } from "react"
+import { useQuery } from "@tanstack/react-query"
+import artworkService from "../services/artwork"
 import Pagination from "../components/Pagination"
-import './Gallery.css'
+import "./Gallery.css"
 
 export default function Gallery() {
-  const [artworks, setArtworks] = useState([])
-  const [loading, setLoading] = useState(true)
-
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(20)
-  const [total, setTotal] = useState(0)
 
-  useEffect(() => {
-    setLoading(true)
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["artworks", page, limit],
+    queryFn: () => artworkService.getAll(page, limit),
+    keepPreviousData: true, // keeps old page visible while new one loads
+  })
 
-    artworkService.getAll(page, limit)
-      .then(data => {
-        setArtworks(data.artworks)
-        setTotal(data.total)
-        setLoading(false)
-      })
-  }, [page, limit])
-
+  const artworks = data?.artworks || []
+  const total = data?.total || 0
   const totalPages = Math.ceil(total / limit)
 
   return (
@@ -32,9 +26,13 @@ export default function Gallery() {
         <p>Explore my latest works and creative projects</p>
       </div>
 
-      {loading ? (
+      {isLoading ? (
         <div className="gallery-loading">
           <p>Loading artworks...</p>
+        </div>
+      ) : isError ? (
+        <div className="gallery-empty">
+          <p>Failed to load artworks</p>
         </div>
       ) : artworks.length === 0 ? (
         <div className="gallery-empty">

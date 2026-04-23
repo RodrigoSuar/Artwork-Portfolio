@@ -7,6 +7,24 @@ const setToken = newToken => {
     token = `Bearer ${newToken}`
 }
 
+// Handle 401 responses by clearing storage and redirecting to login
+const handleAuthError = () => {
+    window.localStorage.removeItem('loggedAdmin')
+    token = null
+    window.location.href = '/admin/login'
+}
+
+// Add response interceptor to catch 401 errors
+axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            handleAuthError()
+        }
+        return Promise.reject(error)
+    }
+)
+
 
 
 const create = async (newObject) => {
@@ -27,7 +45,10 @@ const remove = async (id) => {
 
 const update =  async (id, newObject) => {
     try{
-        const request = await axios.put(`${baseUrl}/${id}`,newObject)
+        const config = {
+            headers: {Authorization:token}
+        }
+        const request = await axios.put(`${baseUrl}/${id}`,newObject,config)
         return request.data
     } catch (error) {
         console.error("Error udpating:", error)
