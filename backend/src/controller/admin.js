@@ -36,7 +36,7 @@ adminRouter.post("/", async (request, response, next) => {
       return response.status(401).json({ error: "token invalid" });
     }
 
-    if (!body.image || !body.title) {
+    if (!body.title) {
       return response.status(400).json({
         error: "missing required fields",
       });
@@ -44,7 +44,6 @@ adminRouter.post("/", async (request, response, next) => {
 
     const artwork = new Artwork({
       title: body.title,
-      image: body.image,
       description: body.description,
       key: body.key,
     });
@@ -142,8 +141,9 @@ adminRouter.put("/:id", async (request, response, next) => {
 //     }
 // })
 
-// get signedURl so frontend can upload file to S3
 
+
+// get signedURl so frontend can upload file to S3
 adminRouter.get("/upload-url/image", async (req, res, next) => {
   try {
     const decodedToken = jwt.verify(req.token, process.env.SECRET);
@@ -174,14 +174,13 @@ adminRouter.get("/upload-url/image", async (req, res, next) => {
     });
 
     const uploadURL = await getSignedUrl(s3, command, {
-      expiresIn: 60,
+      expiresIn: 30,
     });
 
-    const fileUrl = `${config.S3_BUCKET_URL}/${fileName}`;
+    
 
     res.json({
       uploadURL,
-      fileUrl,
       key: fileName,
     });
   } catch (error) {

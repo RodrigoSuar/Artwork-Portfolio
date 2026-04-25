@@ -78,14 +78,16 @@ const Admin = () => {
 
     // ---------- ADD ----------
     const addArtwork = async (event) => {
-        event.preventDefault()
+        try{
+
+            event.preventDefault()
 
         const urls = await adminService.createURL(imageFile)
         await adminService.uploadFile(imageFile, urls.uploadURL)
 
         const artworkObject = {
             title: newArtwork.title,
-            image: urls.fileUrl,
+            
             description: newArtwork.description,
             key: urls.key,
         }
@@ -111,6 +113,10 @@ const Admin = () => {
         queryClient.invalidateQueries({
             queryKey: ["admin-artworks"],
         })
+        } catch (error){
+            console.error(error)
+        }
+        
     }
 
     // ---------- DELETE ----------
