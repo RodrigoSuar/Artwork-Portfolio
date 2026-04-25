@@ -11,6 +11,8 @@ import Admin from './pages/Admin.jsx'
 import Contact from './pages/Contact.jsx'
 import AdminLogin from './pages/AdminLogin.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
+import ErrorPage from './pages/ErrorPage.jsx'
 
 // 1. Create Query Client
 const queryClient = new QueryClient()
@@ -33,15 +35,18 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      { path: "*", element: <ErrorPage /> },
     ],
   },
 ])
 
-// 3. Wrap everything with QueryClientProvider
+// 3. Wrap everything with QueryClientProvider and ErrorBoundary
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </ErrorBoundary>
   </StrictMode>,
 )

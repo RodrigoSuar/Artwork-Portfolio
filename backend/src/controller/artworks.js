@@ -44,10 +44,10 @@ const config  = require("../utils/config");
 //   }
 // });
 
-artworksRouter.get("/:page/:limit", async (request,response , next) => {
+artworksRouter.get("/", async (request,response , next) => {
   try {
-    const page = parseInt(request.params.page, 10) || 1;
-    const l = parseInt(request.params.limit);
+    const page = parseInt(request.query.page, 10) || 1;
+    const l = parseInt(request.query.limit);
     const limit = l < 20 
       ? l
       : 20;

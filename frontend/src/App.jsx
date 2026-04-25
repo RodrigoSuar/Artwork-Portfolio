@@ -3,15 +3,19 @@ import Home from "./pages/Home"
 import "./App.css"
 import Nav from "./components/Nav"
 import { Outlet } from "react-router-dom"
+import ErrorBoundary from "./components/ErrorBoundary"
+
 function App() {
 
   return (
-   <>
-    <Nav/>
-    <main>
-      <Outlet/>
-    </main>
-   </>
+   <ErrorBoundary>
+    <>
+      <Nav/>
+      <main>
+        <Outlet/>
+      </main>
+    </>
+   </ErrorBoundary>
   )
 }
 
