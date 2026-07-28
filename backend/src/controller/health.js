@@ -24,7 +24,7 @@ healthRouter.get("/db",async (req,res) => {
         uptime: process.uptime(),
         db: "connected",
     });
-    } catch (error){
+    } catch {
         res.status(500).json({
             status: "error",
             db: "disconnected",
@@ -49,7 +49,7 @@ healthRouter.get("/ready", async(req,res) => {
             checks.mongodb = "down";
             isHealthy = false;
         }
-    } catch (error){
+    } catch {
         checks.mongodb = "down";
         isHealthy = false;
     }
@@ -60,7 +60,7 @@ healthRouter.get("/ready", async(req,res) => {
     try{
         await s3.send(new ListBucketsCommand({}));
         checks.s3 = "ok";
-    } catch(error){
+    } catch {
         checks.s3 = "down";
         isHealthy = false;
     }

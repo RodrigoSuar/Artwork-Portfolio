@@ -30,10 +30,13 @@ loginRouter.post("/", async (req, res) => {
         
     });
 
-    res.status(200).json({
-        token,
-        username: admin.username,
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "strict",
     });
+
+    res.json({ message: "Login successful", username: admin.username });
 });
 
 module.exports = loginRouter;

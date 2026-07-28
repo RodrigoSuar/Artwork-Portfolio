@@ -1,3 +1,5 @@
+const logger = require("./logger");
+
 require("dotenv").config({
     path: process.env.NODE_ENV === "production"
         ? ".env.production"
@@ -20,7 +22,7 @@ const S3_BUCKET_URL = process.env.S3_BUCKET_URL;
 const SECRET = process.env.SECRET;
 
 if(!SECRET){
-    console.error("FATAL ERROR: SECRET environment variable is not defined");
+    logger.error("FATAL ERROR: SECRET environment variable is not defined");
     process.exit(1);
 }
 

@@ -2,19 +2,18 @@ const express = require("express");
 const mongoose = require("mongoose");
 const config = require("./utils/config");
 const logger = require("./utils/logger");
-
 const middleware = require("./utils/middleware");
-
 const artworksRouter = require("./controller/artworks");
 const adminRouter = require("./controller/admin");
 const loginRouter = require("./controller/login");
 const healthRouter = require("./controller/health");
-
 const rateLimit = require("./utils/rateLimiter");
-
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 const app = express();
+
+
 
 //logger.info("connecting to" , config.MONGODB_URI);
 
@@ -45,7 +44,7 @@ try{
 app.use(express.json());
 
 //app.use(express.json({ limit: "10mb" }));
-
+app.use(cookieParser());
 app.use(middleware.requestLogger);
 app.use(middleware.getTokenFrom);
 
@@ -54,6 +53,7 @@ app.use(cors({
   origin: process.env.NODE_ENV === "production" 
     ? ["http://localhost:3000", "http://frontend"]  // Docker network
     : ["http://localhost:5173","http://127.0.0.1:5173"],
+    credentials: true,
 }));
 
 app.use("/api/artwork",rateLimit.apiLimiter);

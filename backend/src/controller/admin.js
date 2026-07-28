@@ -7,6 +7,7 @@ const config = require("../utils/config");
 const s3 = require("../services/s3");
 //const upload = multer({storage: multer.memoryStorage()})
 const jwt = require("jsonwebtoken");
+const authMiddleware = require("../utils/authMiddleware");
 
 // adminRouter.post("/register", async (req, res) => {
   
@@ -28,15 +29,11 @@ const jwt = require("jsonwebtoken");
 
 
 //add image metadata to DB
-adminRouter.post("/", async (request, response, next) => {
+adminRouter.post("/", authMiddleware, async (request, response,next) => {
   try {
     const body = request.body;
-    const decodedToken = jwt.verify(request.token, config.SECRET);
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: "token invalid" });
-    }
 
-    if (!body.title) {
+    if(!body.title){
       return response.status(400).json({
         error: "missing required fields",
       });
@@ -50,9 +47,12 @@ adminRouter.post("/", async (request, response, next) => {
 
     const savedArtwork = await artwork.save();
     response.status(201).json(savedArtwork);
-  } catch (error) {
+    
+  } catch (error){
     next(error);
   }
+
+
 });
 
 //delete image from S3 and delete metadata from DB
@@ -96,6 +96,7 @@ adminRouter.delete("/:id", async (req, res, next) => {
 //currenlty only updated image title
 adminRouter.put("/:id", async (request, response, next) => {
   try {
+    
     const decodedToken = jwt.verify(request.token, process.env.SECRET);
     if (!decodedToken.id) {
       return response.status(401).json({ error: "token invalid" });
@@ -119,27 +120,6 @@ adminRouter.put("/:id", async (request, response, next) => {
     next(error);
   }
 });
-
-//route for adding image to S3
-// artworksRouter.post("/upload",upload.single("image"),async(req,res) => {
-//   try {
-//     const file = req.file
-//     if(!file) return res.status(400).json({error: "No file uploaded"})
-//     const fileName = `image/${Date.now()}-${file.originalname}`
-//     const command = new PutObjectCommand({
-//       Bucket: config.S3_BUCKET_NAME,
-//       Key:fileName,
-//       Body: file.buffer,
-//       ContentType: file.mimetype
-//     })
-//     await s3.send(command)
-//     const imageURL =
-//     res.json({imageURL})
-//     } catch (error){
-//       console.error(error)
-//       res.status(500).json({error: "upload failed"})
-//     }
-// })
 
 
 
@@ -187,6 +167,18 @@ adminRouter.get("/upload-url/image", async (req, res, next) => {
     next(error);
   }
 });
+
+
+adminRouter.get("/test", authMiddleware, async (request,response,next) => {
+  try {
+    response.status(200).json({ message: "test complete" });
+  } catch (error) {
+    next(error);
+  }
+
+});
+
+
 
 
 

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef } from "react"
 import { Navigate } from "react-router-dom"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 
@@ -7,24 +7,6 @@ import EditBox from "../components/EditBox"
 import adminService from "../services/admin"
 import Pagination from "../components/Pagination"
 import "./Admin.css"
-
-// Check if JWT token is expired
-const isTokenExpired = (token) => {
-    try {
-        const base64Url = token.split(".")[1]
-        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/")
-        const jsonPayload = decodeURIComponent(
-            atob(base64)
-                .split("")
-                .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-                .join("")
-        )
-        const { exp } = JSON.parse(jsonPayload)
-        return exp * 1000 < Date.now()
-    } catch {
-        return true
-    }
-}
 
 const Admin = () => {
     const queryClient = useQueryClient()
@@ -50,25 +32,16 @@ const Admin = () => {
     const fileInputRef = useRef(null)
 
     // ---------- AUTH CHECK ----------
+    // The token lives in an httpOnly cookie, so this is just a UX hint;
+    // the backend enforces real authorization on every admin request.
     const loggedUserJSON = window.localStorage.getItem("loggedAdmin")
     const admin = loggedUserJSON ? JSON.parse(loggedUserJSON) : null
-
-    const tokenInvalid = !admin?.token || isTokenExpired(admin.token)
-
-    useEffect(() => {
-        const token = admin?.token
-
-        if (token && !tokenInvalid) {
-            adminService.setToken(token)
-        }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     // ---------- REACT QUERY ----------
     const { data, isLoading } = useQuery({
         queryKey: ["admin-artworks", page, limit],
         queryFn: () => artworkService.getAll(page, limit),
-        enabled: !!admin && !tokenInvalid, // only run if logged in
+        enabled: !!admin, // only run if logged in
         keepPreviousData: true,
     })
 
@@ -153,7 +126,7 @@ const Admin = () => {
     const handleTitleChange = (e) => setNewTitle(e.target.value)
 
     // ---------- AUTH GUARD ----------
-    if (!admin || tokenInvalid) {
+    if (!admin) {
         return <Navigate to="/admin/login" />
     }
 

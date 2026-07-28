@@ -1283,10 +1283,7 @@ railway up
 4. Set environment variables in dashboard
 5. Deploy
 
-**Option 3: Using Deploy Script**
-```bash
-./deploy.sh
-```
+
 
 ### Environment Variables for Production
 ```env

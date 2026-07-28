@@ -1,6 +1,5 @@
 import { useState } from "react"
 import loginService from '../services/login'
-import adminService from '../services/admin'
 import { Navigate } from "react-router-dom"
 import './AdminLogin.css'
 
@@ -14,10 +13,10 @@ const AdminLogin = () => {
         event.preventDefault()
         try{
             const admin = await loginService.login({username,password})
+
             window.localStorage.setItem(
-                'loggedAdmin', JSON.stringify(admin)
+                'loggedAdmin', JSON.stringify({ username: admin.username })
             )
-            adminService.setToken(admin.token)
             setUser(admin)
             setUsername('')
             setPassword('')
