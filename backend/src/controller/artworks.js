@@ -52,7 +52,13 @@ artworksRouter.get("/", async (request,response , next) => {
       ? l
       : 20;
     const skip = (page-1) *limit;
-    const artwork = await Artwork.find({})
+
+    const filter = {};
+    if (request.query.featured !== undefined) {
+      filter.featured = request.query.featured === "true";
+    }
+
+    const artwork = await Artwork.find(filter)
     .skip(skip)
     .limit(limit);
 
@@ -74,7 +80,7 @@ artworksRouter.get("/", async (request,response , next) => {
     }),
   );
 
-    const total = await Artwork.countDocuments({});
+    const total = await Artwork.countDocuments(filter);
     response.json({ artworks: art, total });
   } catch (error){
     next(error);

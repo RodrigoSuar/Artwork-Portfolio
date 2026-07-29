@@ -16,6 +16,14 @@ const artworkSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
+  width: Number,
+  height: Number,
+
+  featured: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 artworkSchema.set("toJSON", {

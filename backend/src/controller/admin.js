@@ -43,6 +43,9 @@ adminRouter.post("/", authMiddleware, async (request, response,next) => {
       title: body.title,
       description: body.description,
       key: body.key,
+      width: body.width,
+      height: body.height,
+      featured: body.featured,
     });
 
     const savedArtwork = await artwork.save();
@@ -102,7 +105,7 @@ adminRouter.put("/:id", async (request, response, next) => {
       return response.status(401).json({ error: "token invalid" });
     }
 
-    const { title } = request.body;
+    const { title, width, height, featured } = request.body;
     const id = request.params.id;
 
     const art = await Artwork.findById(id);
@@ -111,7 +114,10 @@ adminRouter.put("/:id", async (request, response, next) => {
       return response.status(404).end();
     }
 
-    art.title = title;
+    if (title !== undefined) art.title = title;
+    if (width !== undefined) art.width = width;
+    if (height !== undefined) art.height = height;
+    if (featured !== undefined) art.featured = featured;
 
     const updatedArtwork = await art.save();
 

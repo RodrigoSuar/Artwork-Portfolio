@@ -2,6 +2,19 @@
    GLOBAL STYLES & RESET
    ============================================ */
 
+:root {
+  --paper: #f4ecdf;
+  --paper-deep: #ece1d0;
+  --ink: #2b2420;
+  --ink-soft: #5a4f45;
+  --clay: #b5652f;
+  --clay-deep: #8f4c22;
+  --gold: #c19a6b;
+  --line: rgba(43, 36, 32, 0.14);
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -13,11 +26,22 @@ html {
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f9f9f9;
-  color: #333;
+  font-family: var(--font-body);
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(43, 36, 32, 0.05) 1px, transparent 0),
+    linear-gradient(180deg, var(--paper) 0%, var(--paper-deep) 100%);
+  background-size: 22px 22px, 100% 100%;
+  background-attachment: fixed;
+  color: var(--ink);
   line-height: 1.6;
   min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 /* ============================================
@@ -62,13 +86,13 @@ select {
   width: 100%;
   padding: 0.875rem;
   margin: 0;
-  border: 1px solid #d0d0d0;
-  border-radius: 0;
+  border: 1px solid var(--line);
+  border-radius: 2px;
   font-size: 1rem;
   font-family: inherit;
   transition: all 0.3s ease;
-  background: white;
-  color: #333;
+  background: #fffdfa;
+  color: var(--ink);
 }
 
 input::placeholder,
@@ -80,8 +104,8 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: #c19a6b;
-  box-shadow: 0 0 0 2px rgba(193, 154, 107, 0.1);
+  border-color: var(--clay);
+  box-shadow: 0 0 0 3px rgba(181, 101, 47, 0.12);
   background: #fffbf7;
 }
 
@@ -95,22 +119,24 @@ textarea {
    ============================================ */
 
 button {
-  background: #c19a6b;
-  color: white;
+  background: var(--clay);
+  color: #fff8ee;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0;
+  padding: 0.75rem 1.75rem;
+  border-radius: 2px;
   cursor: pointer;
   font-size: 1rem;
   font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: var(--font-body);
+  letter-spacing: 0.02em;
+  transition: all 0.25s ease;
+  box-shadow: 3px 3px 0 rgba(43, 36, 32, 0.18);
 }
 
 button:hover {
-  background: #a88555;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: var(--clay-deep);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(43, 36, 32, 0.2);
 }
 
 button:active {

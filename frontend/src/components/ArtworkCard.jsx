@@ -11,11 +11,21 @@ const sanitizeForHtml = (text) => {
     .replace(/'/g, "&#x27;")
 }
 
-export default function ArtworkCard({ artwork }) {
+export default function ArtworkCard({ artwork, variant = "card" }) {
+  if (variant === "grid") {
+    return (
+      <div className="artwork-grid-box">
+        <img src={artwork.image} alt={sanitizeForHtml(artwork.title)} loading="lazy" />
+      </div>
+    )
+  }
+
   return (
     <Link to={"/"} style={{ textDecoration: "none" }}>
       <div className="artwork-card">
-        <img src={artwork.image} alt={sanitizeForHtml(artwork.title)} />
+        <div className="artwork-card-frame">
+          <img src={artwork.image} alt={sanitizeForHtml(artwork.title)} />
+        </div>
         <h3>{artwork.title}</h3>
       </div>
     </Link>

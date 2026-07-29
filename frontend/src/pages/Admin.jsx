@@ -58,13 +58,18 @@ const Admin = () => {
         const urls = await adminService.createURL(imageFile)
         await adminService.uploadFile(imageFile, urls.uploadURL)
 
+       const { width, height } = await getImageDimensions(imageFile);
+
         const artworkObject = {
             title: newArtwork.title,
-            
+            width,
+            height,
             description: newArtwork.description,
             key: urls.key,
         }
 
+        console.log(artworkObject.width)
+        
         await adminService.create(artworkObject)
 
         setNewArtwork({
@@ -91,6 +96,31 @@ const Admin = () => {
         }
         
     }
+    
+
+
+    const getImageDimensions = (file) => {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+
+            img.onload = () => {
+                resolve({
+                    width: img.naturalWidth,
+                    height: img.naturalHeight,
+                });
+
+                URL.revokeObjectURL(img.src);
+            };
+
+            img.onerror = reject;
+
+            img.src = URL.createObjectURL(file);
+        });
+    };
+
+
+
+
 
     // ---------- DELETE ----------
     const deleteArtwork = async (id) => {
