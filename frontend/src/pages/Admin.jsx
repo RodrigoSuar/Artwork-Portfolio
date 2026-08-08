@@ -68,7 +68,7 @@ const Admin = () => {
             key: urls.key,
         }
 
-        console.log(artworkObject.width)
+        //console.log(artworkObject.width)
         
         await adminService.create(artworkObject)
 
