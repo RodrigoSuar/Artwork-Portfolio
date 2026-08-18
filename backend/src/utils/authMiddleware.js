@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const config = require("./config");
 
 
 const authMiddleware = (req, res, next) => {
@@ -9,7 +10,7 @@ const authMiddleware = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.SECRET);
+    const decoded = jwt.verify(token, config.SECRET);
     req.user = decoded;
     next();
   } catch {

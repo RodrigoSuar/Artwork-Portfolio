@@ -6,8 +6,16 @@ const Artwork = require("../models/artwork");
 const config = require("../utils/config");
 const s3 = require("../services/s3");
 //const upload = multer({storage: multer.memoryStorage()})
-const jwt = require("jsonwebtoken");
 const authMiddleware = require("../utils/authMiddleware");
+const validate = require("../utils/validate");
+const { objectIdParam } = require("../schemas/common");
+const {
+  createArtworkBody,
+  updateArtworkBody,
+  uploadUrlQuery,
+} = require("../schemas/artwork");
+
+adminRouter.use(authMiddleware);
 
 // adminRouter.post("/register", async (req, res) => {
   
@@ -29,15 +37,9 @@ const authMiddleware = require("../utils/authMiddleware");
 
 
 //add image metadata to DB
-adminRouter.post("/", authMiddleware, async (request, response,next) => {
+adminRouter.post("/", validate(createArtworkBody, "body"), async (request, response,next) => {
   try {
     const body = request.body;
-
-    if(!body.title){
-      return response.status(400).json({
-        error: "missing required fields",
-      });
-    }
 
     const artwork = new Artwork({
       title: body.title,
@@ -59,13 +61,8 @@ adminRouter.post("/", authMiddleware, async (request, response,next) => {
 });
 
 //delete image from S3 and delete metadata from DB
-adminRouter.delete("/:id", async (req, res, next) => {
+adminRouter.delete("/:id", validate(objectIdParam, "params"), async (req, res, next) => {
   try {
-    const decodedToken = jwt.verify(req.token, config.SECRET);
-    if (!decodedToken.id) {
-      return res.status(401).json({ error: "token invalid" });
-    }
-
     const { id } = req.params;
 
     const artwork = await Artwork.findById(id);
@@ -97,14 +94,12 @@ adminRouter.delete("/:id", async (req, res, next) => {
 
 //update image
 //currenlty only updated image title
-adminRouter.put("/:id", async (request, response, next) => {
+adminRouter.put(
+  "/:id",
+  validate(objectIdParam, "params"),
+  validate(updateArtworkBody, "body"),
+  async (request, response, next) => {
   try {
-    
-    const decodedToken = jwt.verify(request.token, process.env.SECRET);
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: "token invalid" });
-    }
-
     const { title, width, height, featured } = request.body;
     const id = request.params.id;
 
@@ -125,25 +120,15 @@ adminRouter.put("/:id", async (request, response, next) => {
   } catch (error) {
     next(error);
   }
-});
+  },
+);
 
 
 
 // get signedURl so frontend can upload file to S3
-adminRouter.get("/upload-url/image", async (req, res, next) => {
+adminRouter.get("/upload-url/image", validate(uploadUrlQuery, "query"), async (req, res, next) => {
   try {
-    const decodedToken = jwt.verify(req.token, process.env.SECRET);
-    if (!decodedToken.id) {
-      return res.status(401).json({ error: "token invalid" });
-    }
-
-    const fileType = req.query.type;
-
-    // Validate file type is an allowed image MIME type
-    const allowedMimeTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
-    if (!fileType || !allowedMimeTypes.includes(fileType)) {
-      return res.status(400).json({ error: "Invalid file type" });
-    }
+    const fileType = req.validated.query.type;
 
     // Extract extension from type
     const extension = fileType.split("/")[1]; // "png", "jpeg"
@@ -175,7 +160,7 @@ adminRouter.get("/upload-url/image", async (req, res, next) => {
 });
 
 
-adminRouter.get("/test", authMiddleware, async (request,response,next) => {
+adminRouter.get("/test", async (request,response,next) => {
   try {
     response.status(200).json({ message: "test complete" });
   } catch (error) {

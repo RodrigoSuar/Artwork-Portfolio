@@ -4,6 +4,8 @@ const Artwork = require("../models/artwork");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const s3 = require("../services/s3");
 const config  = require("../utils/config");
+const validate = require("../utils/validate");
+const { listArtworkQuery } = require("../schemas/artwork");
 //const multer = require("multer")
 
 //const upload = multer({storage: multer.memoryStorage()})
@@ -44,18 +46,14 @@ const config  = require("../utils/config");
 //   }
 // });
 
-artworksRouter.get("/", async (request,response , next) => {
+artworksRouter.get("/", validate(listArtworkQuery, "query"), async (request,response , next) => {
   try {
-    const page = parseInt(request.query.page, 10) || 1;
-    const l = parseInt(request.query.limit);
-    const limit = l < 20 
-      ? l
-      : 20;
-    const skip = (page-1) *limit;
+    const { page, limit, featured } = request.validated.query;
+    const skip = (page - 1) * limit;
 
     const filter = {};
-    if (request.query.featured !== undefined) {
-      filter.featured = request.query.featured === "true";
+    if (featured !== undefined) {
+      filter.featured = featured;
     }
 
     const artwork = await Artwork.find(filter)

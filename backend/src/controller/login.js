@@ -3,8 +3,10 @@ const bcrypt = require("bcrypt");
 const loginRouter = require("express").Router();
 const Admin = require("../models/admin");
 const config = require("../utils/config");
+const validate = require("../utils/validate");
+const { loginBody } = require("../schemas/login");
 
-loginRouter.post("/", async (req, res) => {
+loginRouter.post("/", validate(loginBody, "body"), async (req, res) => {
     const { username, password } = req.body;
 
     const admin = await Admin.findOne({ username });
@@ -32,7 +34,7 @@ loginRouter.post("/", async (req, res) => {
 
     res.cookie("token", token, {
         httpOnly: true,
-        secure: false,
+        secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
     });
 
