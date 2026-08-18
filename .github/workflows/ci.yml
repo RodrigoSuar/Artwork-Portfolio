@@ -21,6 +21,14 @@ jobs:
           cache-dependency-path: backend/package-lock.json
       - run: npm ci
       - run: npm run lint
+      - run: npm test
+        env:
+          SECRET: ci-test-secret
+          AWS_ACCESS_KEY: test
+          AWS_SECRET_KEY: test
+          AWS_REGION: us-east-1
+          S3_BUCKET_NAME: test-bucket
+          S3_BUCKET_URL: http://example.com
 
   frontend:
     runs-on: ubuntu-latest
