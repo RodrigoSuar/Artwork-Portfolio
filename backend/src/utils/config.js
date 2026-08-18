@@ -26,6 +26,14 @@ if(!SECRET){
     process.exit(1);
 }
 
+const UPSTASH_REDIS_REST_URL = process.env.UPSTASH_REDIS_REST_URL;
+const UPSTASH_REDIS_REST_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+if (process.env.NODE_ENV !== "test" && (!UPSTASH_REDIS_REST_URL || !UPSTASH_REDIS_REST_TOKEN)) {
+    logger.error("FATAL ERROR: UPSTASH_REDIS_REST_URL/UPSTASH_REDIS_REST_TOKEN environment variables are not defined");
+    process.exit(1);
+}
+
 module.exports = {
     MONGODB_URI,
     PORT,
@@ -35,4 +43,6 @@ module.exports = {
     S3_BUCKET_NAME,
     S3_BUCKET_URL,
     SECRET,
+    UPSTASH_REDIS_REST_URL,
+    UPSTASH_REDIS_REST_TOKEN,
 };

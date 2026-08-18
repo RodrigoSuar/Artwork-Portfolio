@@ -28,7 +28,7 @@ loginRouter.post("/", validate(loginBody, "body"), async (req, res) => {
     };
 
     const token = jwt.sign(adminForToken, config.SECRET, {
-         expiresIn: 60 * 60 * 24, // 24 hours
+         expiresIn: 60 * 60 * 12, // 12 hours
         
     });
 

@@ -12,14 +12,4 @@ const apiLimiter = rateLimit({
   },
 });
 
-const adminLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-});
-
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 5,
-});
-
-module.exports = { apiLimiter,adminLimiter,authLimiter }; 
+module.exports = { apiLimiter };

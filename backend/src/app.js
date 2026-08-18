@@ -8,10 +8,15 @@ const adminRouter = require("./controller/admin");
 const loginRouter = require("./controller/login");
 const healthRouter = require("./controller/health");
 const rateLimit = require("./utils/rateLimiter");
+const upstashRateLimit = require("./utils/upstashRateLimit");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 const app = express();
+
+// Needed so req.ip reflects the real client IP (not the reverse proxy's)
+// when running behind a proxy/load balancer, e.g. in the Docker setup.
+app.set("trust proxy", 1);
 
 
 
@@ -59,10 +64,9 @@ app.use(cors({
 app.use("/api/artwork",rateLimit.apiLimiter);
 app.use("/api/artwork",artworksRouter);
 
-app.use("/api/admin",rateLimit.adminLimiter);
 app.use("/api/admin",adminRouter);
 
-app.use("/api/login",rateLimit.authLimiter);
+app.use("/api/login",upstashRateLimit.loginLimiter);
 app.use("/api/login",loginRouter);
 
 app.use("/api/health",rateLimit.apiLimiter);

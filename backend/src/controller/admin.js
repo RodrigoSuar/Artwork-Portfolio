@@ -7,6 +7,7 @@ const config = require("../utils/config");
 const s3 = require("../services/s3");
 //const upload = multer({storage: multer.memoryStorage()})
 const authMiddleware = require("../utils/authMiddleware");
+const { adminLimiter } = require("../utils/upstashRateLimit");
 const validate = require("../utils/validate");
 const { objectIdParam } = require("../schemas/common");
 const {
@@ -16,6 +17,8 @@ const {
 } = require("../schemas/artwork");
 
 adminRouter.use(authMiddleware);
+// Runs after authMiddleware so requests are keyed by IP + admin user id.
+adminRouter.use(adminLimiter);
 
 // adminRouter.post("/register", async (req, res) => {
   
